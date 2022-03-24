@@ -1,6 +1,7 @@
-#include <bits/stdc++.h>
-
-using namespace std;
+#include <iostream>
+#include <vector>
+#include <math.h>
+#include <algorithm>
 
 const double Pi = acos(-1), EPS = 1e-6;
 
@@ -35,7 +36,7 @@ Vector operator-(const Vector& a, const Vector& b) {
     return a + (-1) * b;
 }
 
-Vector operator-=(Vector &a, const Vector &b) {
+Vector operator-=(Vector& a, const Vector& b) {
     a.x -= b.x;
     a.y -= b.y;
     return a;
@@ -49,12 +50,12 @@ long long operator%(const Vector& a, const Vector& b) {
     return 1LL * a.x * b.y - 1LL * b.x * a.y;
 }
 
-ostream &operator<<(ostream &out, Vector& P) {
+ostream& operator<<(ostream& out, Vector& P) {
     out << P.x << " " << P.y;
     return out;
 }
 
-istream &operator>>(istream &in, Vector& p) {
+istream& operator>>(istream& in, Vector& p) {
     in >> p.x >> p.y;
     return in;
 }
@@ -63,7 +64,7 @@ long long sqrLen(const Vector A) {
     return 1LL * A.x * A.x + 1LL * A.y * A.y;
 }
 
-vector<Vector> makeHull(vector<Vector> &p) {
+std::vector<Vector> makeHull(std::vector<Vector> &p) {
     int n = p.size();
     Vector s = p[0];
     for (int i = 1; i < n; i++) {
@@ -74,10 +75,10 @@ vector<Vector> makeHull(vector<Vector> &p) {
     for (auto &x : p) {
         x -= s;
     }
-    sort(p.begin(), p.end(), [&](Vector A, Vector B) {
+    std::sort(p.begin(), p.end(), [&](Vector A, Vector B) {
             return A % B > 0 || (A % B == 0 && sqrLen(A) < sqrLen(B));
     });
-    vector<Vector> h;
+    std::vector<Vector> h;
     h.push_back(p[0]);
     for (int i = 1; i < n; i++) {
         while (h.size() >= 2) {
@@ -101,7 +102,7 @@ vector<Vector> makeHull(vector<Vector> &p) {
     return h;
 }
 
-bool isIn(const vector<Vector> &p, const Vector A) {
+bool isIn(const std::vector<Vector>& p, const Vector A) {
     int n = p.size();
     if ((p[1] - p[0]) % (A - p[0]) < 0 || (p[n - 1] - p[0]) % (A - p[0]) > 0) {
         return false;
@@ -132,6 +133,7 @@ struct Line {
     }
 };
 
+// angle comparison
 bool operator<(const Vector &A, const Vector &B) {
     if (A.y > 0 || (A.y == 0 && A.x > 0)) {
         if (B.y > 0 || (B.y == 0 && B.x > 0)) {
@@ -145,7 +147,7 @@ bool operator<(const Vector &A, const Vector &B) {
     return A % B > 0;
 }
 
-vector<Vector> MinkovskySum(vector<Vector> &p, vector<Vector> &h) {
+std::vector<Vector> MinkovskySum(std::vector<Vector>& p, std::vector<Vector>& h) {
     int id1 = 0, id2 = 0;
     int n = p.size(), m = h.size();
     for (int i = 0; i < n; i++) {
@@ -158,7 +160,7 @@ vector<Vector> MinkovskySum(vector<Vector> &p, vector<Vector> &h) {
             id2 = i;
         }
     }
-    vector<Vector> ans, all;
+    std::vector<Vector> ans, all;
     ans.push_back(p[id1] + h[id2]);
     for (int i = 0; i < n; i++) {
         all.push_back(p[(i + 1) % n] - p[i]);
@@ -166,7 +168,7 @@ vector<Vector> MinkovskySum(vector<Vector> &p, vector<Vector> &h) {
     for (int i = 0; i < m; i++) {
         all.push_back(h[(i + 1) % m] - h[i]);
     }
-    sort(all.begin(), all.end());
+    std::sort(all.begin(), all.end());
     for (auto x : all) {
         ans.push_back(ans.back() + x);
     }
@@ -176,29 +178,29 @@ vector<Vector> MinkovskySum(vector<Vector> &p, vector<Vector> &h) {
 
 signed main() {
     int n, m, k;
-    cin >> n;
-    vector<Vector> A(n);
+    std::cin >> n;
+    std::vector<Vector> A(n);
     for (auto &a : A) {
         cin >> a;
     }
-    cin >> m;
-    vector<Vector> B(m);
+    std::cin >> m;
+    std::vector<Vector> B(m);
     for (auto &b : B) {
-        cin >> b;
+        std::cin >> b;
     }
-    cin >> k;
-    vector<Vector> C(k);
+    std::cin >> k;
+    std::vector<Vector> C(k);
     for (auto &c : C) {
-        cin >> c;
+        std::cin >> c;
     }
-    vector<Vector> h = MinkovskySum(A, B);
+    std::vector<Vector> h = MinkovskySum(A, B);
     h = MinkovskySum(h, C);
     h = makeHull(h);
     int q;
-    cin >> q;
+    std::cin >> q;
     while (q--) {
         Vector A;
-        cin >> A;
-        cout << (isIn(h, 3 * A) ? "YES\n" : "NO\n");
+        std::cin >> A;
+        std::cout << (isIn(h, 3 * A) ? "YES\n" : "NO\n");
     }
 }
