@@ -1,6 +1,7 @@
-#include <bits/stdc++.h>
-
-using namespace std;
+#include <vector>
+#include <iostream>
+#include <deque>
+#include <cstring>
 
 const int MAXN = 500 + 10, INF = 1e9;
 
@@ -12,8 +13,8 @@ struct Edge {
     }
 };
 
-vector<int> g[MAXN];
-vector<Edge> edges;
+std::vector<int> g[MAXN];
+std::vector<Edge> edges;
 int S, T;
 int ptr[MAXN], dist[MAXN];
 int M;
@@ -29,7 +30,7 @@ int dfs(int v, int min_capacity) {
             continue;
         }
         if (dist[v] + 1 == dist[edges[id].to]) {
-            int x = dfs(edges[id].to, min(edges[id].get_capacity(), min_capacity));
+            int x = dfs(edges[id].to, std::min(edges[id].get_capacity(), min_capacity));
             if (x) {
                 ptr[v]--;
                 edges[id].flow += x;
@@ -42,9 +43,9 @@ int dfs(int v, int min_capacity) {
 }
 
 bool bfs() {
-    fill(dist, dist + MAXN, INF);
+    std::fill(dist, dist + MAXN, INF);
     dist[S] = 0;
-    deque<int> q;
+    std::deque<int> q;
     q.push_back(S);
     while (!q.empty()) {
         int v = q.front();
@@ -83,33 +84,15 @@ void addEdge(int u, int v, int w) {
     edges.push_back(Edge(u, 0));
 }
 
-signed main() {
-    #ifndef LOCAL
-    freopen("matan.in", "r", stdin);
-    freopen("matan.out", "w", stdout);
-    #endif
-    int n;
-    cin >> n;
-    int sum = 0;
-    S = 0, T = n + 1;
-    for (int i = 1; i <= n; i++) {
-        int x;
-        cin >> x;
-        if (x < 0) {
-            addEdge(i, T, -x);
-        } else {
-            addEdge(S, i, x);
-            sum += x;
-        }
+int main() {
+    int n, m;
+    std::cin >> n >> m;
+    S = 0, T = n - 1;
+    for (int i = 0; i < m; i++) {
+        int u, v, w;
+        std::cin >> u >> v >> w;
+        u--, v--;
+        addEdge(u, v, w);
     }
-    for (int i = 1; i <= n; i++) {
-        int k;
-        cin >> k;
-        while (k--) {
-            int u;
-            cin >> u;
-            addEdge(i, u, INF);
-        }
-    }
-    cout << sum - findFlow();
+    std::cout << findFlow();
 }
