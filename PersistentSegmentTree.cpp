@@ -8,10 +8,7 @@ int last_nd = 0;
 
 struct Node {
     int sum, left, right;
-    Node() {
-        sum = 0;
-        left = right = -1;
-    }
+    Node() : sum(0), left(-1), right(-1) {}
 };
 
 Node nd[MAXM];
